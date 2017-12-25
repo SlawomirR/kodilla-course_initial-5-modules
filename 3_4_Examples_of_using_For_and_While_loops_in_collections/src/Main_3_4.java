@@ -1,4 +1,5 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Main_3_4 {
@@ -14,10 +15,10 @@ public class Main_3_4 {
     2. Jedna z nich będzie przechowywała obiekty o parzystej ilości znaków 'a', a druga o nieparzystej.
     */
     public static void main(String[] args) {
-        arrayDequeFiller();
+        arrayListDivider(arrayDequeFiller());
     }
 
-    static private void arrayDequeFiller() {
+    static private ArrayDeque<String> arrayDequeFiller() {
         Random random = new Random();
         int aStringSize;
         ArrayDeque<String> arrayDeque = new ArrayDeque<>();
@@ -29,7 +30,26 @@ public class Main_3_4 {
             }
             arrayDeque.offer(stringBuilder.toString());
         }
-        System.out.println(arrayDeque);
+        return arrayDeque;
+    }
 
+    static private void arrayListDivider(ArrayDeque<String> stringArrayDeque) {
+        ArrayList<String> oddStringArrayList = new ArrayList<>();
+        ArrayList<String> evenStringArrayList = new ArrayList<>();
+        while (stringArrayDeque.peek() != null) {
+            if ((stringArrayDeque.peek().length() % 2) == 0) {
+                evenStringArrayList.add(stringArrayDeque.poll());
+            } else {
+                oddStringArrayList.add(stringArrayDeque.poll());
+            }
+        }
+        System.out.println("We have " + oddStringArrayList.size() + " odd entries and " + evenStringArrayList.size() + " even ones");
+        System.out.println("Odd string list:");
+        for (String tmp: oddStringArrayList) {
+            System.out.println(tmp);
+        }
+        for (String tmp: evenStringArrayList) {
+            System.out.println(tmp);
+        }
     }
 }
