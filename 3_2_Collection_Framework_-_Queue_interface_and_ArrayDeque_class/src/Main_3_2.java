@@ -2,6 +2,14 @@ import java.util.ArrayDeque;
 import java.util.Objects;
 
 class Main_3_2 {
+    /*
+    napisz program, który:
+    tworzy stos i umieszcza w nim pięć obiektów typu Book,
+    sprawdza rozmiar stosu,
+    następnie usuwa wszystkie książki
+    i ponownie sprawdza rozmiar stosu.
+    Program powinien wyświetlić również, która książka została usunięta ze stosu jako ostatnia.
+    */
     public static void main(String[] args) {
         ArrayDeque<Book> books = new ArrayDeque<>();
         buildNewBookStack(books);
