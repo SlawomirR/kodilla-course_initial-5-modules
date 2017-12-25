@@ -14,28 +14,20 @@ class Main_3_2 {
         ArrayDeque<Book> books = new ArrayDeque<>();
         buildNewBookStack(books);
         processTasksWithBooks(books);
-        buildNewBookStack(books);
-        cancelingTasksWithBooks(books);
     }
 
     private static void processTasksWithBooks(ArrayDeque<Book> books) {
         Book temporaryItem = new Book();
         while (books.peek() != null) {
-            temporaryItem = books.poll();
+            temporaryItem = books.pop();
             System.out.println("We are processing " + temporaryItem);
         }
-        System.out.println(temporaryItem.toString() + " was the last book we processed.");
         System.out.println("How many books left? -> " + books.size());
-    }
-
-    private static void cancelingTasksWithBooks(ArrayDeque<Book> books) {
-        System.out.println("We clean up all book at once");
-        books.clear();
-        System.out.println("We have " + books.size() + " books in our queue");
+        System.out.println(temporaryItem.toString() + " was the last book we processed.");
     }
 
     private static void buildNewBookStack(ArrayDeque<Book> books) {
-        System.out.println("Books added to the queue:");
+        System.out.println("Books added to the queue stack:");
         int maxBooksNumber = 5;
         for (int i = 1; i < maxBooksNumber + 1; i++) {
             books.push(new Book("Book_" + i, "Author_" + i, calculateFakeYearOfPublish(i)));
