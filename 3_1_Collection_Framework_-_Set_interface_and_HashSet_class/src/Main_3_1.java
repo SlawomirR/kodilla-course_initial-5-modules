@@ -2,6 +2,13 @@ import java.util.HashSet;
 import java.util.Objects;
 
 class Main_3_1 {
+    /*
+    napisz program, który:
+    będzie przechowywał w zbiorze HashSet zestaw kilku obiektów reprezentujących książki.
+    Każda książka powinna mieć tytuł, autora i rok wydania
+    nie zapomnij również o zdefiniowaniu metod hashCode() oraz equals() dla swoich książek.
+    używając pętlę for-each wyświetl tytuły książek, które zostały wydane przed 2010 rokiem.
+    */
     public static void main(String[] args) {
         int maxBooksNumber = 9;
         int limitingSearchYear = 2010;
