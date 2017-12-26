@@ -15,36 +15,34 @@ public class Main_3_5 {
     i usuwania obiektu z mapy HashMap liczącej kilka milionów obiektów.
     */
     public static void main(String[] args) {
-        int sizeOfTheListOfItems = 2_000_000;
+        int sizeOfTheListOfItems = 1_000_000;
         TimeMeasurement howLong = new TimeMeasurement();
         howLong.timeMeasurement("START");
         BookListFiller bookListFiller = new BookListFiller();
         LinkedList<Book> booksLinkedList = bookListFiller.bookListFiller(sizeOfTheListOfItems);
-
         System.out.println("The number of items in the list: " + booksLinkedList.size());
         howLong.timeMeasurement("STOP");
     }
 }
 
 class TimeMeasurement {
-    private boolean isTimeMeasurmentStarted;
+    private boolean isTimeMeasurementStarted;
     private long startTime;
-    private long estimatedTime;
 
     TimeMeasurement() {
         startTime = 0;
-        isTimeMeasurmentStarted = false;
+        isTimeMeasurementStarted = false;
     }
 
     void timeMeasurement(String use_Start_Or_Stop_Word) {
         switch (use_Start_Or_Stop_Word.toLowerCase()) {
             case "start":
                 startTime = System.currentTimeMillis();
-                isTimeMeasurmentStarted = true;
+                isTimeMeasurementStarted = true;
                 break;
             case "stop":
-                if (isTimeMeasurmentStarted == true) {
-                    estimatedTime = System.currentTimeMillis() - startTime;
+                if (isTimeMeasurementStarted) {
+                    long estimatedTime = System.currentTimeMillis() - startTime;
                     System.out.println("The task completion time was: " + estimatedTime + "ms.");
                 }
                 break;
