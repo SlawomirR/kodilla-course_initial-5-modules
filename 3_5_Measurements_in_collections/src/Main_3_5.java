@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -17,11 +18,60 @@ public class Main_3_5 {
     public static void main(String[] args) {
         int sizeOfTheListOfItems = 1_000_000;
         TimeMeasurement howLong = new TimeMeasurement();
-        howLong.timeMeasurement("START");
+        Book firstObject = new Book("StartName", "StartTitle");
+        Book lastObject = new Book("StopName", "StopTitle");
+
+        // == PART 1 ==
         BookListFiller bookListFiller = new BookListFiller();
+
+        howLong.timeMeasurement("START");
         LinkedList<Book> booksLinkedList = bookListFiller.bookListFiller(sizeOfTheListOfItems);
-        System.out.println("The number of items in the list: " + booksLinkedList.size());
+        System.out.print("Create " + booksLinkedList.size() + " items in the List took: ");
         howLong.timeMeasurement("STOP");
+
+        howLong.timeMeasurement("START");
+        booksLinkedList.remove(firstObject);
+        System.out.print("Removing the first object took: ");
+        howLong.timeMeasurement("STOP");
+        howLong.timeMeasurement("START");
+        booksLinkedList.remove(lastObject);
+        System.out.print("Removing the last object from the list lasted: ");
+        howLong.timeMeasurement("STOP");
+        System.out.println("The list has " + booksLinkedList.size() + " items.");
+
+        howLong.timeMeasurement("START");
+        booksLinkedList.add(firstObject); // or .add(0, new Book("StartName", "StartTitle"));
+        System.out.print("Adding the first object to the list took: ");
+        howLong.timeMeasurement("STOP");
+        howLong.timeMeasurement("START");
+        booksLinkedList.addLast(lastObject); //or .add(booksLinkedList.size(), new Book("StopName", "StopTitle"));
+        System.out.print("Adding the object at the end took: ");
+        howLong.timeMeasurement("STOP");
+        System.out.println("The list has " + booksLinkedList.size() + " items.");
+
+        // == PART 2 ==
+        BookMapFiller bookMapFiller = new BookMapFiller();
+
+        howLong.timeMeasurement("START");
+        HashMap<Book, Integer> booksHashMap = bookMapFiller.bookMapFiller(sizeOfTheListOfItems);
+        System.out.print("Create " + booksLinkedList.size() + " items in the map took: ");
+        howLong.timeMeasurement("STOP");
+
+        howLong.timeMeasurement("START");
+        System.out.println("Did we find: " + lastObject + " -> " + booksHashMap.containsKey(lastObject));
+        System.out.print("Finding the Key in the Map took: ");
+        howLong.timeMeasurement("STOP");
+
+        howLong.timeMeasurement("START");
+        booksHashMap.remove(firstObject);
+        System.out.print("Removing the object from the Map took: ");
+        howLong.timeMeasurement("STOP");
+
+        howLong.timeMeasurement("START");
+        booksHashMap.put(firstObject, sizeOfTheListOfItems+1);
+        System.out.print("Adding the object to the Map took: ");
+        howLong.timeMeasurement("STOP");
+
     }
 }
 
@@ -43,11 +93,14 @@ class TimeMeasurement {
             case "stop":
                 if (isTimeMeasurementStarted) {
                     long estimatedTime = System.currentTimeMillis() - startTime;
-                    System.out.println("The task completion time was: " + estimatedTime + "ms.");
+                    System.out.println(estimatedTime + "ms.");
+                    isTimeMeasurementStarted = false;
+                } else {
+                    System.err.println("WARNING: You missed to set START point so all measurements are broken!");
                 }
                 break;
             default:
-                System.out.println("Only two switches allowed: START and STOP.");
+                System.err.println("WARNING: Only two switches allowed: START and STOP.");
         }
     }
 }
@@ -55,10 +108,24 @@ class TimeMeasurement {
 class BookListFiller {
     LinkedList<Book> bookListFiller(int elementsQuantity) {
         LinkedList<Book> booksLinkedList = new LinkedList<>();
+        booksLinkedList.add(new Book("StartName", "StartTitle"));
         for (int i = 0; i < elementsQuantity; i++) {
             booksLinkedList.add(new Book(("Great Name_" + i), ("Interesting title_" + i)));
         }
+        booksLinkedList.add(new Book("StopName", "StopTitle"));
         return booksLinkedList;
+    }
+}
+
+class BookMapFiller {
+    HashMap<Book, Integer> bookMapFiller(int elementsQuantity) {
+        HashMap<Book, Integer> booksHashMap = new HashMap<>(elementsQuantity + 20, 1);
+        booksHashMap.put(new Book("StartName", "StartTitle"), elementsQuantity + 1);
+        for (int i = 0; i < elementsQuantity; i++) {
+            booksHashMap.put(new Book(("Great Name_" + i), ("Interesting title_" + i)), i);
+        }
+        booksHashMap.put(new Book("StopName", "StopTitle"), elementsQuantity + 2);
+        return booksHashMap;
     }
 }
 
