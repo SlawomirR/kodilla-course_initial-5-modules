@@ -6,102 +6,83 @@ public class Main_3_5 {
     /*
     Zadanie składa się z dwóch części.
     Część 1 dla LinkedList
-    Stwórz klasę reprezentującą książkę o nazwie Book. Klasa powinna mieć dwa pola: author oraz title.
-    Pamiętaj o implementacji metod hashCode() oraz equals(Object o). Będziemy jej używali jako obiektów kolekcji LinkedList.
-    Stwórz program, który zmierzy czas operacji wyszukiwania i usunięcia obiektu na początku (z użyciem metody remove(Object o)),
+    Stwórz klasę reprezentującą książkę o nazwie Book, która ma dwa pola: author oraz title.
+    Zaimplementuj metody hashCode() oraz equals(Object o). Klasa Book będzie dla obiektów kolekcji LinkedList.
+    Stwórz program, który zmierzy czas operacji:
+    wyszukiwania i usunięcia obiektu na początku (z użyciem metody remove(Object o)),
     wyszukiwania i usunięcia obiektu na końcu (z użyciem metody remove(Object o)),
     wstawiania na początku oraz wstawiania na końcu listy LinkedList liczącej kilka milionów obiektów.
     Część 2 dla HashMap
-    Stwórz program, który zmierzy czas operacji wyszukiwania po kluczu, a także czas dodawania
-    i usuwania obiektu z mapy HashMap liczącej kilka milionów obiektów.
+    Stwórz program, który zmierzy czas operacji:
+    wyszukiwania po kluczu,
+    dodawania nowej pary
+    usuwania obiektu z mapy HashMap liczącej kilka milionów obiektów.
     */
     public static void main(String[] args) {
         int sizeOfTheListOfItems = 1_000_000;
         TimeMeasurement howLong = new TimeMeasurement();
-        Book firstObject = new Book("StartName", "StartTitle");
-        Book lastObject = new Book("StopName", "StopTitle");
 
-        // == PART 1 ==
-        BookListFiller bookListFiller = new BookListFiller();
+        // == PART 1 == LinkedList ==
+        ProcessingLinkedList processingLinkedList = new ProcessingLinkedList();
+        processingLinkedList.process(howLong, new BookListFiller(), sizeOfTheListOfItems);
 
-        howLong.timeMeasurement("START");
-        LinkedList<Book> booksLinkedList = bookListFiller.bookListFiller(sizeOfTheListOfItems);
-        System.out.print("Create " + booksLinkedList.size() + " items in the List took: ");
-        howLong.timeMeasurement("STOP");
-
-        howLong.timeMeasurement("START");
-        booksLinkedList.remove(firstObject);
-        System.out.print("Removing the first object took: ");
-        howLong.timeMeasurement("STOP");
-        howLong.timeMeasurement("START");
-        booksLinkedList.remove(lastObject);
-        System.out.print("Removing the last object from the list lasted: ");
-        howLong.timeMeasurement("STOP");
-        System.out.println("The list has " + booksLinkedList.size() + " items.");
-
-        howLong.timeMeasurement("START");
-        booksLinkedList.add(firstObject); // or .add(0, new Book("StartName", "StartTitle"));
-        System.out.print("Adding the first object to the list took: ");
-        howLong.timeMeasurement("STOP");
-        howLong.timeMeasurement("START");
-        booksLinkedList.addLast(lastObject); //or .add(booksLinkedList.size(), new Book("StopName", "StopTitle"));
-        System.out.print("Adding the object at the end took: ");
-        howLong.timeMeasurement("STOP");
-        System.out.println("The list has " + booksLinkedList.size() + " items.");
-
-        // == PART 2 ==
-        BookMapFiller bookMapFiller = new BookMapFiller();
-
-        howLong.timeMeasurement("START");
-        HashMap<Book, Integer> booksHashMap = bookMapFiller.bookMapFiller(sizeOfTheListOfItems);
-        System.out.print("Create " + booksLinkedList.size() + " items in the map took: ");
-        howLong.timeMeasurement("STOP");
-
-        howLong.timeMeasurement("START");
-        System.out.println("Did we find: " + lastObject + " -> " + booksHashMap.containsKey(lastObject));
-        System.out.print("Finding the Key in the Map took: ");
-        howLong.timeMeasurement("STOP");
-
-        howLong.timeMeasurement("START");
-        booksHashMap.remove(firstObject);
-        System.out.print("Removing the object from the Map took: ");
-        howLong.timeMeasurement("STOP");
-
-        howLong.timeMeasurement("START");
-        booksHashMap.put(firstObject, sizeOfTheListOfItems+1);
-        System.out.print("Adding the object to the Map took: ");
-        howLong.timeMeasurement("STOP");
-
+        // == PART 2 == HashMap ==
+        ProcessHashMap processHashMap = new ProcessHashMap();
+        processHashMap.process(howLong, new BookMapFiller(), sizeOfTheListOfItems);
     }
 }
 
-class TimeMeasurement {
-    private boolean isTimeMeasurementStarted;
-    private long startTime;
+class ProcessingLinkedList {
+    void process(TimeMeasurement howLong, BookListFiller bookListFiller, int sizeOfTheListOfItems) {
+        Book firstObject = new Book("StartName", "StartTitle");
+        Book lastObject = new Book("StopName", "StopTitle");
+        // Creating
+            howLong.timeMeasurement("START","");
+        LinkedList<Book> booksLinkedList = bookListFiller.bookListFiller(sizeOfTheListOfItems);
+            howLong.timeMeasurement("STOP","Create "+booksLinkedList.size()+" items in the List took: ");
 
-    TimeMeasurement() {
-        startTime = 0;
-        isTimeMeasurementStarted = false;
+        // Removing
+            howLong.timeMeasurement("START","");
+        booksLinkedList.remove(firstObject);
+            howLong.timeMeasurement("STOP","Removing the first object took: ");
+            howLong.timeMeasurement("START","");
+        booksLinkedList.remove(lastObject);
+            howLong.timeMeasurement("STOP","Removing the last object from the list lasted: ");
+
+        // Adding
+            howLong.timeMeasurement("START","");
+        booksLinkedList.add(firstObject); // or .add(0, new Book("StartName", "StartTitle"));
+            howLong.timeMeasurement("STOP","Adding the first object to the list took: ");
+            howLong.timeMeasurement("START","");
+        booksLinkedList.addLast(lastObject); //or .add(booksLinkedList.size(), new Book("StopName", "StopTitle"));
+            howLong.timeMeasurement("STOP","Adding the object at the end took: ");
     }
+}
 
-    void timeMeasurement(String use_Start_Or_Stop_Word) {
-        switch (use_Start_Or_Stop_Word.toLowerCase()) {
-            case "start":
-                startTime = System.currentTimeMillis();
-                isTimeMeasurementStarted = true;
-                break;
-            case "stop":
-                if (isTimeMeasurementStarted) {
-                    long estimatedTime = System.currentTimeMillis() - startTime;
-                    System.out.println(estimatedTime + "ms.");
-                    isTimeMeasurementStarted = false;
-                } else {
-                    System.err.println("WARNING: You missed to set START point so all measurements are broken!");
-                }
-                break;
-            default:
-                System.err.println("WARNING: Only two switches allowed: START and STOP.");
-        }
+class ProcessHashMap {
+    private Book firstObject = new Book("StartName", "StartTitle");
+    private Book lastObject = new Book("StopName", "StopTitle");
+    void process(TimeMeasurement howLong, BookMapFiller bookMapFiller, int sizeOfTheListOfItems) {
+        //Creating
+            howLong.timeMeasurement("START", "");
+        HashMap<Book, Integer> booksHashMap = bookMapFiller.bookMapFiller(sizeOfTheListOfItems);
+            howLong.timeMeasurement("STOP", "Create " + booksHashMap.size() + " items in the map took: ");
+
+        // Finding
+            howLong.timeMeasurement("START", "");
+        System.out.println("Did we find: " + lastObject + " -> " + booksHashMap.containsKey(lastObject));
+            howLong.timeMeasurement("STOP", "Finding the Key in the Map took: ");
+
+        // Removing
+            howLong.timeMeasurement("START", "");
+        booksHashMap.remove(firstObject);
+            howLong.timeMeasurement("STOP", "Removing the object from the Map took: ");
+
+        // Adding
+            howLong.timeMeasurement("START", "");
+        booksHashMap.put(firstObject, sizeOfTheListOfItems+1);
+            howLong.timeMeasurement("STOP", "Adding the object to the Map took: ");
+
     }
 }
 
@@ -129,7 +110,7 @@ class BookMapFiller {
     }
 }
 
-class Book {
+final class Book {
     private String author;
     private String title;
 
@@ -149,16 +130,42 @@ class Book {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(author, title);
     }
 
     @Override
     public String toString() {
-        return "Book{" +
-                "author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                '}';
+        return "Book{" + "author='" + author + '\'' + ", title='" + title + '\'' + '}';
     }
 }
 
+final class TimeMeasurement {
+    private boolean isTimeMeasurementStarted;
+    private long startTime;
+
+    TimeMeasurement() {
+        startTime = 0;
+        isTimeMeasurementStarted = false;
+    }
+
+    void timeMeasurement(String use_Start_Or_Stop_Word, String informativeCommentary) {
+        switch (use_Start_Or_Stop_Word.toLowerCase()) {
+            case "start":
+                startTime = System.currentTimeMillis();
+                isTimeMeasurementStarted = true;
+                break;
+            case "stop":
+                if (isTimeMeasurementStarted) {
+                    long estimatedTime = System.currentTimeMillis() - startTime;
+                    System.out.print(informativeCommentary);
+                    System.out.println(estimatedTime + "ms.");
+                    isTimeMeasurementStarted = false;
+                } else {
+                    System.err.println("WARNING: You missed to set START point so all measurements are broken!");
+                }
+                break;
+            default:
+                System.err.println("WARNING: Only two switches allowed: START and STOP.");
+        }
+    }
+}
