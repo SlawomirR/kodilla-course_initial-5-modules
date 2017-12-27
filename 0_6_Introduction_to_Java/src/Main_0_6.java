@@ -8,11 +8,11 @@ public class Main_0_6 {
 }
 
 class User {
-    private String name;
-    private String surname;
-    private String sex;
-    private int age;
-    private String mail;
+    private final String name;
+    private final String surname;
+    private final String sex;
+    private final int age;
+    private final String mail;
 
     // getters
     String getName() {
@@ -79,7 +79,7 @@ class ForumUser extends User {
     }
 
     // methods
-    String printLoginStatus() { //additional method for formatting purposes
+    private String printLoginStatus() { //additional method for formatting purposes
         if (getIsLogged()) {
             return "YES";
         } else {
@@ -87,9 +87,11 @@ class ForumUser extends User {
         }
     }
 
+    @SuppressWarnings("EmptyMethod")
     public void postPublish() {
     }
 
+    @SuppressWarnings("EmptyMethod")
     public void postComment() {
     }
 
