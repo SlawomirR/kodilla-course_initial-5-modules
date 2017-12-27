@@ -1,83 +1,75 @@
 public class Main_1_1 {
-        // switch debug information ON or OFF
-        private static boolean DEBUG = false;
+    public static void main(String[] args) {
+        // zmienne do kontroli granic wieku i wzrostu uzytkownika
+        double limitAge = 30;
+        double limitHeight = 160;
 
-        // static method for debug purposes; all instances in code are marked => // DEBUG
-        public static void debugInfo(String message) {
-            if (DEBUG == true) {
-                System.out.println("DEBUG: " + message);
-            }
-        }
+        // dane do zadania
+        String name = "Adam";
+        double age = 40.5;
+        double height = 178;
 
-        public static void main(String[] args) throws java.lang.Exception {
-            // creating an object for access to methods from the UserValidator class
-            UserValidator validate = new UserValidator();
-
-            // preliminary data of the task
-            String name = "Adam";
-            double age = 40.5;
-            double height = 178;
-
-            // unimportant info to show in console
-            System.out.println("INFO: Preliminary data of the task:");
-            System.out.println("INFO: User name: " + name + ", age: " + age + ", height: " + height + ".\n");
-
-            // main executive block for the task
-            if (validate.validateName(name)) {
-                debugInfo("After name checking"); // DEBUG
-                System.out.print(validate.validateAge(age));
-                System.out.println(validate.validateHeight(height));
-
-                System.out.println("\nINFO: The program has finished functioning correctly");
-            } else {
-                System.err.println("ERROR: There is no (user) \"name\" value!");
-            }
+        UserValidator uservalidator = new UserValidator(name, age, height);
+        if (uservalidator.nameValidator()) {
+            uservalidator.groupAge(limitAge);
+            uservalidator.groupHeight(limitHeight);
         }
     }
-    class UserValidator {
-        // constants defining the division of data ranges
-        public static final double AGE_CHANGING_POINT = 30;
-        public static final double HEIGHT_CHANGING_POINT = 160;
+}
 
-        public boolean validateName(String name) {
-            boolean result;
-            if (name != null) {
-                Main_1_1.debugInfo("name is true"); // DEBUG
-                result = true;
-            } else {
-                Main_1_1.debugInfo("name is false"); // DEBUG
-                result = false;
-            }
-            return result;
-        }
+class UserValidator extends User {
+    UserValidator(String name, double age, double height) {
+        super(name, age, height);
+    }
 
-        // checking the range for age
-        public String validateAge(double age) {
-            Main_1_1.debugInfo("age statement 0"); // DEBUG
-            if ((age <= 0) || (age > 130)) {
-                Main_1_1.debugInfo("age statement 1"); // DEBUG
-                return "WARNING: Unusual case - check age value";
-            } else {
-                if (age > 30) {
-                    Main_1_1.debugInfo("age statement 2"); // DEBUG
-                    return "User is older than " + AGE_CHANGING_POINT;
-                } else {
-                    Main_1_1.debugInfo("age statement 3"); // DEBUG
-                    return "User is younger (or equal) than " + AGE_CHANGING_POINT;
-                }
-            }
-        }
-
-        // checking the range for growth
-        public String validateHeight(double height) {
-            if ((height <= 0) || (height > 275)) {
-                return "WARNING: Unusual case - check height value";
-            } else {
-                if (height > 160) {
-                    return " and higher than " + HEIGHT_CHANGING_POINT + "cm.";
-                } else {
-                    return " or lower (or equal) than " + HEIGHT_CHANGING_POINT + "cm.";
-                }
-            }
+    boolean nameValidator() {
+        if (getName() != null) {
+            System.out.println("User name is: " + getName() + ". Age: " + getAge() + ". Height: " + getHeight() + "cm.\n");
+            return true;
+        } else {
+            System.err.println("Variable \"name\" is not set");
+            return false;
         }
     }
+
+    void groupAge(double limitAge) {
+        if (getAge() > limitAge) {
+            System.out.print("User is older than " + limitAge);
+        } else {
+            System.out.print("User is younger or equal " + limitAge);
+        }
+    }
+
+    void groupHeight(double limitHeight) {
+        if (getHeight() > limitHeight) {
+            System.out.println(" and higher than " + limitHeight + "cm");
+        } else {
+            System.out.println(" or lower or equal than " + limitHeight + "cm");
+        }
+    }
+}
+
+class User {
+    private String name;
+    private double age;
+    private double height;
+
+    double getAge() {
+        return age;
+    }
+
+    String getName() {
+        return name;
+    }
+
+    double getHeight() {
+        return height;
+    }
+
+    User(String name, double age, double height) {
+        this.name = name;
+        this.age = age;
+        this.height = height;
+    }
+}
+
