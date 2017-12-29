@@ -1,57 +1,122 @@
 import java.util.Arrays;
 import java.util.Random;
 /**
-@version v0.8
+@version v0.9
+
+Zadanie:
+wykonać transpozycję macierzy
 */
-// TODO wydzielić osobne klasy dla tworzenia i transponowania macierzy aby mieć
-// możliwość zaprogramowania manualnego lub automatycznego dodawania macierzy
 public class TranspositionOfTheMatrix {
-    /*
-    wykonać transpozycję macierzy
-    */
     public static void main(String[] args) {
         int raw = 6;
         int column = 3;
-        CreateAndTransposeOfMatrix givenMatrix = new CreateAndTransposeOfMatrix(raw,  column);
-        givenMatrix.createMatrix();
-            System.out.println();
-        givenMatrix.transposeOfMatrix();
+        Matrix matrix = new Matrix(raw, column);
+        CreateMatrix givenMatrix = new CreateMatrix(matrix);
+        TransposeOfMatrix transposeOfMatrix = new TransposeOfMatrix(matrix);
+
+        System.out.println("Do you prefer a randomly filled matrix instead of a manual one? [Yes | No]? <-- YES");
+        givenMatrix.randomlyGenerateMatrix();
+        System.out.println("Generated matrix:\n" + givenMatrix.getMatrixAsString());
+        transposeOfMatrix.makeTranspositionOfMatrix(givenMatrix.getMatrixAsMatrix());
+        System.out.println("\nTransposed matrix:\n" + transposeOfMatrix.getTransposedMatrix());
     }
 }
 
-final class CreateAndTransposeOfMatrix {
-    private int raw;
-    private int column;
+class CreateMatrix {
+    private Matrix matrix;
     private Random random;
-    private int[][] givenMatrix;
-    private int[][] transposedMatrix;
+    private ShowMatrix matrixToShow;
 
-    CreateAndTransposeOfMatrix(int raw, int column) {
-        this.raw = raw;
-        this.column = column;
-        this.random = new Random();
-        this.givenMatrix = new int[raw][column];
-        this.transposedMatrix = new int[column][raw];
+    protected String getMatrixAsString() {
+        return matrixToShow.show(matrix);
     }
 
-    void createMatrix() {
-        System.out.println("Given matrix:");
-        for (int i = 0; i < raw; i++) {
-            for (int j = 0; j < column; j++) {
-                givenMatrix[i][j] = random.nextInt(10);
+    protected Matrix getMatrixAsMatrix() {
+        return matrix;
+    }
+
+    CreateMatrix(Matrix givenMatrix) {
+        this.matrix = givenMatrix;
+        matrixToShow = new ShowMatrix();
+        random = new Random();
+    }
+
+    void randomlyGenerateMatrix() {
+        for (int i = 0; i < matrix.getRaw(); i++) {
+            for (int j = 0; j < matrix.getColumn(); j++) {
+                this.matrix.setMatrix(i, j, random.nextInt(10));
             }
-            System.out.println(Arrays.toString(givenMatrix[i]));
         }
     }
 
-    void transposeOfMatrix() {
+    Matrix customDataMatrix() { // Create a method for manual filling the matrix
+        return null;
+    }
+}
 
-       System.out.println("Transposed matrix:");
-        for (int i = 0; i < column; i++) {
-            for (int j = 0; j < raw; j++) {
-                transposedMatrix[i][j] = givenMatrix[j][i];
+class TransposeOfMatrix {
+    private Matrix transposedMatrix;
+    private ShowMatrix matrixToShow;
+
+    TransposeOfMatrix(Matrix emptyMatrix) {
+        matrixToShow = new ShowMatrix();
+        transposedMatrix = new Matrix(emptyMatrix.getColumn(), emptyMatrix.getRaw());
+    }
+
+    String getTransposedMatrix() {
+        return matrixToShow.show(transposedMatrix);
+    }
+
+    void makeTranspositionOfMatrix(Matrix givenMatrix) {
+        for (int i = 0; i < transposedMatrix.getColumn(); i++) {
+            for (int j = 0; j < transposedMatrix.getRaw(); j++) {
+                transposedMatrix.setMatrix(j, i, givenMatrix.getMatrix(i, j));
             }
-            System.out.println(Arrays.toString(transposedMatrix[i]));
         }
+    }
+}
+
+class ShowMatrix {
+    String show(Matrix givenMatrix) {
+        StringBuilder result = new StringBuilder();
+        for (int[] raw: givenMatrix.getMatrix()) {
+            result.append(Arrays.toString(raw));
+            result.append("\n");
+        }
+        return result.toString();
+    }
+}
+
+final class Matrix {
+    private int[][] matrix;
+
+    protected int getRaw() {
+        return matrix.length;
+    }
+    protected int getColumn() {
+        return matrix[0].length;
+    }
+    protected int getMatrix(int j, int i) {
+        return matrix[j][i];
+    }
+    protected int[][] getMatrix() {
+        return matrix;
+    }
+
+    protected void setMatrix(int currentRaw, int currentColumn, int value) {
+        this.matrix[currentRaw][currentColumn] = value;
+    }
+
+    Matrix(int raw, int column) {
+        this.matrix = new int[raw][column];
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        for (int[] raw: getMatrix()) {
+            result.append(Arrays.toString(raw));
+        }
+        return result.toString();
     }
 }
