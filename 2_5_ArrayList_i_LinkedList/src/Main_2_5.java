@@ -37,7 +37,8 @@ public class Main_2_5 {
 }
 
 class ScoreList {
-    private int maxScore = 0, minScore = 7;
+    private int maxScore = Integer.MIN_VALUE;
+    private int minScore = Integer.MAX_VALUE;
     private double sum = 0;
     private int arrayListSize = 9;
 
@@ -47,10 +48,7 @@ class ScoreList {
     public void scoreList() {
         System.out.print("Otrzymane oceny: {");
         for (int i = 0; i < arrayListSize; i++) {
-            int score = random.nextInt(7);
-            while (score < 1) {
-                score = random.nextInt(7);
-            }
+            int score = random.nextInt(6)+1;
             arrayList.add(score);
             sum += score;
             if (minScore > score) {
@@ -113,4 +111,3 @@ class Book {
         return "Book: " + "\"" + book + "\"" + ", (" + year + ")";
     }
 }
-
