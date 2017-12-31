@@ -7,6 +7,7 @@ Pamiętaj:
     Pętla powinna wyświetlić wszystkie elementy tablicy.
     Na koniec powinna zostać wyświetlona wartość średniej.
 */
+import java.util.Random;
 public class Main_2_1 {
     public static void main(String[] args) {
         // liczba elementów tablicy
@@ -15,12 +16,14 @@ public class Main_2_1 {
         // deklaracja tablicy
         int[] array = new int[arraySize];
 
-        // wypełnienie tablicy liczbami od 1 do arraySize
+        // wypełnienie tablicy losowymi liczbami od 0 do limitowane przez (randomMaxNumber-1)
+        int randomMaxNumber = 100;
+        Random random = new Random(randomMaxNumber);
         for (int i = 0; i < arraySize; i++) {
-            array[i] = i + 1;
+            array[i] = random.nextInt(randomMaxNumber);
         }
 
-        // wyświetlenie elementów tablicy
+        // wyświetlenie elementów tablicy oraz średniej wartości
         double sum = 0;
         System.out.print("Array {");
         for (int i = 0; i < arraySize; i++) {
@@ -31,7 +34,6 @@ public class Main_2_1 {
             }
             sum += array[i];
         }
-        // wyświetlenie średniej wartości
         System.out.println("}\nAverage value: " + sum + " / " + array.length + " = " + (sum/array.length));
 
     }
