@@ -4,91 +4,98 @@ Zadanie: mapa uczniów i ocen
     Program ma wyświetlać średnią arytmetyczną ocen każdego ucznia.
 */
 import java.util.*;
+/**
+ * Version 1.1
+ // TODO jak zapisywać średnie w mapie?
+ // TODO wyszukiwać najlepszego i najgorszego z poszczególnych przedmiotów
+ // TODO tworzyć listę top 10 najlepszych i najgorszych
+ // TODO dodać wyszukiwanie osoby
+ // TODO dodać możliwość dodawania ocen z przeliczeniem średniej
+ // TODO dodać możliwość korekty oceny z przeliczeniem średniej
+ // TODO dadoć podział uczniów na klasy
+ */
 public class Main_2_6 {
         public static void main(String[] args) {
-            HashMap<Student, Scores> classRegister = new HashMap<Student, Scores>();
-            classRegister.put(new Student("Monika", "Mika", 1982, 3,18, Subjects.MATH), new Scores());
-            classRegister.put(new Student("Monika", "Mika", 1982, 3,18, Subjects.BIOLOGY), new Scores());
-            classRegister.put(new Student("Monika", "Mika", 1982, 3,18, Subjects.GEOGRAPHY), new Scores());
-            classRegister.put(new Student("Piotr", "Gruszka", 1983, 7,28, Subjects.BIOLOGY), new Scores());
-            classRegister.put(new Student("Piotr", "Gruszka", 1983, 7,28, Subjects.MATH), new Scores());
-            classRegister.put(new Student("Krzysztof", "Żuk", 1981, 8,12, Subjects.GEOGRAPHY), new Scores());
+            ClassRegister classRegister = new ClassRegister();
 
-            for (Map.Entry<Student, Scores> entry: classRegister.entrySet()) {
-                double average = 0;
-                for (double i: entry.getValue().scores) {
-                    average += i;
-                }
-                average = average/entry.getValue().scores.size();
-                System.out.println(entry + " average score: " + String.format("%.2f", (average)));
-            }
+            classRegister.getClassRegister();
         }
     }
 
-    class Student {
-        private String firstName;
-        private String lastName;
-        private Integer birthYear;
-        private Integer birthMonth;
-        private Integer birthDay;
-        private Subjects subject;
-
-        //getters
-        public String getFirstName() {
-            return firstName;
-        }
-        public String getLastName() {
-            return lastName;
-        }
-        public Integer getBirthYear() {
-            return birthYear;
-        }
-        public Integer getBirthMonth() {
-            return birthMonth;
-        }
-        public Integer getBirthDay() {
-            return birthDay;
-        }
-        public Subjects getSubject() {
-            return subject;
+    final class ClassRegister {
+        private HashMap<Student, HashMap<Subjects, Scores>> classRegister = new HashMap<>();
+        void getClassRegister() {
+            System.out.println("We've had " + classRegister.size() + " users in our school ;-)\n");
+            for (Map.Entry<Student, HashMap<Subjects, Scores>> outerEntry: classRegister.entrySet()) {
+                System.out.println(outerEntry.getKey().toString());
+                for (Map.Entry<Subjects, Scores> innerEntry: outerEntry.getValue().entrySet()) {
+                    double average = 0;
+                    for (double iEntry: innerEntry.getValue().getScores()) {
+                        average += iEntry;
+                    }
+                    average = average / innerEntry.getValue().getScores().size();
+                    System.out.println("\t" + innerEntry.getKey().toString() + " " + innerEntry.getValue().toString()
+                            + " with average score: " + String.format("%.2f", average));
+                }
+                System.out.println("====================");
+            }
+            System.out.println("We've had " + classRegister.size() + " users in our school ;-)");
         }
 
-        // setters
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-        public void setBirthYear(int birthYear) {
-            this.birthYear = birthYear;
-        }
-        public void setBirthMonth(int birthMonth) {
-            this.birthMonth = birthMonth;
-        }
-        public void setBirthDay(int birthDay) {
-            this.birthDay = birthDay;
-        }
-        public void setSubject(Subjects subject) {
-            this.subject = subject;
-        }
-
-        public Student(String firstName, String lastName, int birthYear, int birthMonth, int birthDay) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.birthYear = birthYear;
-            this.birthMonth = birthMonth;
-            this.birthDay = birthDay;
-        }
-
-        public Student(String firstName, String lastName, int birthYear, int birthMonth, int birthDay, Subjects subject) {
-            this(firstName, lastName, birthYear, birthMonth, birthDay);
-            this.subject = subject;
+        ClassRegister() {
+            classRegister.put(new Student("Monika", "Mika", new RandomShortFakePeselGenerator().getFakePesel()), new ParticularSubjectsScores().getParticularSubjectsScores());
+            classRegister.put(new Student("Monika", "Mika", new RandomShortFakePeselGenerator().getFakePesel()), new ParticularSubjectsScores().getParticularSubjectsScores());
+            classRegister.put(new Student("Monika", "Mika", new RandomShortFakePeselGenerator().getFakePesel()), new ParticularSubjectsScores().getParticularSubjectsScores());
+            classRegister.put(new Student("Piotr", "Gruszka", new RandomShortFakePeselGenerator().getFakePesel()), new ParticularSubjectsScores().getParticularSubjectsScores());
+            classRegister.put(new Student("Piotr", "Gruszka", new RandomShortFakePeselGenerator().getFakePesel()), new ParticularSubjectsScores().getParticularSubjectsScores());
+            classRegister.put(new Student("Krzysztof", "Żuk", new RandomShortFakePeselGenerator().getFakePesel()), new ParticularSubjectsScores().getParticularSubjectsScores());
+            for (int i = 0; i < 170; i++) {
+                String helpString = "abcdefghijklmnopqrstwzźżąęćśńłó";
+                classRegister.put(new Student(new RandomStringGenerator(3, 12, helpString).getRandomString(), new RandomStringGenerator(3, 31, helpString).getRandomString(), new RandomShortFakePeselGenerator().getFakePesel()), new ParticularSubjectsScores().getParticularSubjectsScores());
+            }
         }
 
         @Override
         public String toString() {
-            return "Student: " + firstName + " " + lastName + ", born: " + birthYear + "-" + birthMonth + "-" + birthDay + ", " + subject + " scores";
+            String getKey ="";
+            for (Map.Entry<Student, HashMap<Subjects, Scores>> outerEntry: classRegister.entrySet()) {
+                getKey = outerEntry.getKey().toString();
+            }
+            return "Student: " + getKey;
+        }
+    }
+
+    final class Student {
+        private String firstName;
+        private String lastName;
+        private String peselId;
+
+        //getters
+        private String getFirstName() {
+            return firstName;
+        }
+        private String getLastName() {
+            return lastName;
+        }
+        private String getBirthYear() {
+            return peselId.substring(0, 2);
+        }
+        private String getBirthMonth() {
+            return peselId.substring(2, 4);
+        }
+        private String getBirthDay() {
+            return peselId.substring(4);
+        }
+
+        Student(String firstName, String lastName, String dateFromPesel) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.peselId = dateFromPesel;
+        }
+
+        @Override
+        public String toString() {
+            return "Student: " + getFirstName() + " " + getLastName() + ", born: 19" + getBirthYear() + "-" + getBirthMonth() + "-" + getBirthDay();
         }
 
         @Override
@@ -96,41 +103,116 @@ public class Main_2_6 {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Student student = (Student) o;
-            return birthYear == student.birthYear &&
-                    birthMonth == student.birthMonth &&
-                    birthDay == student.birthDay &&
-                    Objects.equals(firstName, student.firstName) &&
+            return  Objects.equals(firstName, student.firstName) &&
                     Objects.equals(lastName, student.lastName) &&
-                    Objects.equals(subject, student.subject);
+                    Objects.equals(peselId, student.peselId);
         }
 
         @Override
         public int hashCode() {
-
-            return Objects.hash(subject);
+        /*
+        int result = 17;
+        result = result *37 + firstName.hashCode();
+        result = result *37 + lastName.hashCode();
+        result = result *37 + peselId.hashCode();
+        */
+            return Objects.hash(firstName, lastName, peselId);
         }
     }
 
-    class Scores {
-        ArrayList<Integer> scores = new ArrayList<>();
-        Random random = new Random();
-        Scores() {
-            for (int i = 0; i < 9; i++) {
-                scores.add(random.nextInt(6)+1);
+    final class ParticularSubjectsScores {
+        private HashMap<Subjects, Scores> ParticularSubjectsScores;
+        private StringBuilder fullInfo;
+
+        HashMap<Subjects, Scores> getParticularSubjectsScores() {
+            return ParticularSubjectsScores;
+        }
+
+        ParticularSubjectsScores() {
+            ParticularSubjectsScores = new HashMap<>();
+            //fullInfo = "";
+            for (Subjects subject: Subjects.values()) {
+                ParticularSubjectsScores.put(subject, new Scores());
             }
         }
 
         @Override
         public String toString() {
-            String result = "{ ";
-            for (Integer i: scores) {
-                result += i.toString() + " ";
+            for (Map.Entry<Subjects, Scores> deepEntry : ParticularSubjectsScores.entrySet()) {
+                double average = 0;
+                for (double i : deepEntry.getValue().getScores()) {
+                    average += i;
+                }
+                average = average / deepEntry.getValue().getScores().size();
+                fullInfo.append(deepEntry.getKey() + " " + deepEntry.getValue() + " average score: " + String.format("%.2f", (average)) + "\n");
             }
-            result += "}";
-            return result;
+            return fullInfo.toString();
+        }
+    }
+
+    final class Scores {
+        private ArrayList<Integer> scores;
+
+        protected ArrayList<Integer> getScores() {
+            return scores;
+        }
+
+        Scores() {
+            scores = new ArrayList<>();
+            Random random = new Random();
+            for (int i = 0; i < 9; i++) {
+                scores.add(random.nextInt(6) + 1);
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder result = new StringBuilder();
+            result.append("{ ");
+            for (Integer i : scores) {
+                result.append(i.toString()).append(" ");
+            }
+            result.append("}");
+            return result.toString();
         }
     }
 
     enum Subjects {
-        MATH, GEOGRAPHY, BIOLOGY
+        MATH, GEOGRAPHY, BIOLOGY, CHEMISTRY, PHYSICS
+    }
+
+    final class RandomStringGenerator {
+        private StringBuilder randomString = new StringBuilder();
+
+        RandomStringGenerator(int minLength, int maxLength, String setOfChars) {
+            Random rndStrNum = new Random();
+            int setOfCharsLength = setOfChars.length();
+            int rndStrLen = rndStrNum.nextInt(maxLength - minLength) + minLength;
+            while (rndStrLen >= 0) {
+                randomString.append(setOfChars.charAt(rndStrNum.nextInt(setOfCharsLength)));
+                rndStrLen--;
+            }
+        }
+
+        protected String getRandomString() {
+            return randomString.toString();
+        }
+    }
+
+    final class RandomShortFakePeselGenerator {
+        private String fakePesel;
+
+        RandomShortFakePeselGenerator() {
+            Random rndNum = new Random();
+            Integer rndYear  = rndNum.nextInt(99 - 19) + 19;
+            String rndMonth  = Integer.toString(rndNum.nextInt(12 - 1)  + 1);
+            String rndDay    = Integer.toString(rndNum.nextInt(28 - 1)  + 1);
+            rndMonth = rndMonth.length() == 1? "0" + rndMonth : rndMonth;
+            rndDay   = rndDay.length()   == 1? "0" + rndDay   : rndDay;
+            fakePesel = rndYear.toString() + rndMonth + rndDay;
+        }
+
+        protected String getFakePesel() {
+            return fakePesel;
+        }
     }
