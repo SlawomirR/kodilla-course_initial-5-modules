@@ -10,10 +10,8 @@ public class FindTheFrequencyOfTheLettersOccurrence {
     public static void main(String[] args) {
         String findLetter = "r";
         String sampleText = "Programowanie jest wspaniałym zajęciem dla programistów lubiących programować i tworzyć programy dla innych";
-        ArrayList<String> sss = new ArrayList<>();
-        for (int i = 0; i< sampleText.length(); i++) {
-            sss.add(String.valueOf(sampleText.charAt(i)));
-        }
-        System.out.println("The letter \"" + findLetter + "\" occures: " + Collections.frequency(sss, findLetter) + " times.");
+
+        int letterFrequency = sampleText.length() - sampleText.replace(findLetter, "").length();
+        System.out.println("The letter \"" + findLetter + "\" occures: " + letterFrequency + " times.");
     }
 }
